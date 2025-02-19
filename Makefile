@@ -2,10 +2,10 @@ include makefiles/dependency.mk
 
 K3S_VERSION ?= v1.27.2+k3s1
 STATIC_DIR := pkg/resources/static
-VELA_VERSION ?= v1.10.0
+VELA_VERSION ?= v1.10.1
 VELAUX_VERSION ?= v1.9.4
 VELA_VERSION_NO_V := $(subst v,,$(VELA_VERSION))
-VELAUX_IMAGE_VERSION ?= v1.9.2
+VELAUX_IMAGE_VERSION ?= v1.9.4
 LDFLAGS= "-X github.com/oam-dev/velad/version.VelaUXVersion=${VELAUX_VERSION} -X github.com/oam-dev/velad/version.VelaVersion=${VELA_VERSION}"
 
 UNAME_S := $(shell uname -s)
