@@ -16,7 +16,7 @@ permissions:
 env:
   # Common versions
   GO_VERSION: "1.22"
-  GOLANGCI_VERSION: "v1.52.2"
+  GOLANGCI_VERSION: "v1.54.2"
 
 jobs:
   staticcheck:
