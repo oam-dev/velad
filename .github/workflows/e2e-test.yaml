@@ -88,6 +88,7 @@ jobs:
           export KUBECONFIG=$(./velad kubeconfig --host)
           kubectl wait --for=condition=Ready pod -l app.kubernetes.io/name=vela-core --timeout=180s -n vela-system
           vela addon enable ~/.vela/addons/velaux
+
 #      TODO(qiaozp): fix the issue of e2e test on darwin
 #      - name: Run e2e test
 #        run: ginkgo -v ./test/e2e-test
