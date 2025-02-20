@@ -11,7 +11,7 @@ on:
     branches:
       - main
       - release-*
-  workflow_dispatch: { }
+  workflow_dispatch: {}
 
 jobs:
   build-artifact:
@@ -20,13 +20,14 @@ jobs:
     runs-on: ubuntu-22.04
     strategy:
       matrix:
-        TARGETS: [ linux/amd64, darwin/amd64, windows/amd64, linux/arm64, darwin/arm64 ]
+        TARGETS:
+          [linux/amd64, darwin/amd64, windows/amd64, linux/arm64, darwin/arm64]
     steps:
       - uses: actions/checkout@v3
       - name: Install dependencies
         uses: actions/setup-go@v3
         with:
-          go-version: "1.20.5"
+          go-version: "1.22.0"
       - name: Get matrix
         id: get_matrix
         run: |
@@ -37,22 +38,22 @@ jobs:
         run: |
           make ${{ steps.get_matrix.outputs.OS }}-${{ steps.get_matrix.outputs.ARCH }}
       - name: Upload artifacts
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
           path: bin/velad-${{ steps.get_matrix.outputs.OS }}-${{ steps.get_matrix.outputs.ARCH }}
           name: velad-${{ steps.get_matrix.outputs.OS }}-${{ steps.get_matrix.outputs.ARCH }}
   test-linux:
     runs-on: ubuntu-22.04
-    needs: [ build-artifact ]
+    needs: [build-artifact]
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
       - name: Install dependencies
-        uses: actions/setup-go@v3
+        uses: actions/setup-go@v5
         with:
-          go-version: "1.20.5"
+          go-version: "1.22.0"
       - name: Install ginkgo
         run: go install github.com/onsi/ginkgo/ginkgo@v1.16.5
-      - uses: actions/download-artifact@v3
+      - uses: actions/download-artifact@v4
         with:
           name: velad-linux-amd64
       - run: |
@@ -65,16 +66,16 @@ jobs:
         run: ginkgo -v ./test/e2e-test
   test-darwin:
     runs-on: macos-12
-    needs: [ build-artifact ]
+    needs: [build-artifact]
     steps:
       - uses: actions/checkout@v3
       - name: Install dependencies
         uses: actions/setup-go@v3
         with:
-          go-version: "1.20.5"
+          go-version: "1.22.0"
       - name: Install ginkgo
         run: go install github.com/onsi/ginkgo/ginkgo@v1.16.5
-      - uses: actions/download-artifact@v3
+      - uses: actions/download-artifact@v4
         with:
           name: velad-darwin-amd64
       - name: Setup Docker
@@ -87,6 +88,7 @@ jobs:
           export KUBECONFIG=$(./velad kubeconfig --host)
           kubectl wait --for=condition=Ready pod -l app.kubernetes.io/name=vela-core --timeout=180s -n vela-system
           vela addon enable ~/.vela/addons/velaux
+
 #      TODO(qiaozp): fix the issue of e2e test on darwin
 #      - name: Run e2e test
 #        run: ginkgo -v ./test/e2e-test

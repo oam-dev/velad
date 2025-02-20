@@ -9,29 +9,29 @@ on:
     branches:
       - main
       - release-*
-  workflow_dispatch: { }
+  workflow_dispatch: {}
 permissions:
   contents: read
 
 env:
   # Common versions
-  GO_VERSION: '1.20'
-  GOLANGCI_VERSION: 'v1.52.2'
+  GO_VERSION: "1.22"
+  GOLANGCI_VERSION: "v1.54.2"
 
 jobs:
   staticcheck:
     strategy:
       matrix:
-        machines: [ "ubuntu-22.04","macos-12" ]
+        machines: ["ubuntu-22.04", "macos-12"]
     runs-on: ${{ matrix.machines }}
     steps:
       - name: Setup Go
-        uses: actions/setup-go@v3
+        uses: actions/setup-go@v5
         with:
           go-version: ${{ env.GO_VERSION }}
 
       - name: Checkout
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
         with:
           submodules: true
 
@@ -53,13 +53,13 @@ jobs:
 
       - uses: dominikh/staticcheck-action@v1.3.0
         with:
-          version: "2023.1.3"
+          version: "2024.1"
           install-go: false
 
   lint:
     strategy:
       matrix:
-        machines: [ "ubuntu-22.04","macos-12" ]
+        machines: ["ubuntu-22.04", "macos-12"]
     runs-on: ${{ matrix.machines }}
     steps:
       - name: Setup Go
@@ -97,16 +97,16 @@ jobs:
   go-check:
     strategy:
       matrix:
-        machines: [ "ubuntu-22.04","macos-12" ]
+        machines: ["ubuntu-22.04", "macos-12"]
     runs-on: ${{ matrix.machines }}
     steps:
       - name: Setup Go
-        uses: actions/setup-go@v3
+        uses: actions/setup-go@v5
         with:
           go-version: ${{ env.GO_VERSION }}
 
       - name: Checkout
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
         with:
           submodules: true
 
@@ -128,4 +128,3 @@ jobs:
 
       - name: Check Diff
         run: make check-diff
-

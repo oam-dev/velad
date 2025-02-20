@@ -4,7 +4,7 @@ on:
   push:
     tags:
       - "v*"
-  workflow_dispatch: { }
+  workflow_dispatch: {}
 
 env:
   GITHUB_TOKEN: ${{ github.token }}
@@ -18,7 +18,8 @@ jobs:
     name: build
     strategy:
       matrix:
-        TARGETS: [ linux/amd64, darwin/amd64, windows/amd64, linux/arm64, darwin/arm64]
+        TARGETS:
+          [linux/amd64, darwin/amd64, windows/amd64, linux/arm64, darwin/arm64]
     env:
       VELA_VERSION_KEY: github.com/oam-dev/velad/version.VelaVersion
       VELAUX_VERSION_KEY: github.com/oam-dev/velad/version.VelaUXVersion
@@ -28,11 +29,11 @@ jobs:
       DIST_DIRS: find * -type d -exec
     steps:
       - name: Checkout
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
       - name: Set up Go
-        uses: actions/setup-go@v3
+        uses: actions/setup-go@v5
         with:
-          go-version: "1.20.5"
+          go-version: "1.22"
       - name: Get release
         id: get_release
         uses: bruceadams/get-release@v1.2.2
@@ -97,7 +98,7 @@ jobs:
           asset_name: velad-${{ env.VELAD_VERSION }}-${{ steps.get_matrix.outputs.OS }}-${{ steps.get_matrix.outputs.ARCH }}.zip
           asset_content_type: binary/octet-stream
       - name: Post sha256
-        uses: actions/upload-artifact@v2
+        uses: actions/upload-artifact@v4
         with:
           name: sha256sums
           path: ./_bin/sha256-${{ steps.get_matrix.outputs.OS }}-${{ steps.get_matrix.outputs.ARCH }}.txt
@@ -125,4 +126,3 @@ jobs:
           verlte ${{ env.VELAD_VERSION }} $LATEST_VERSION && echo "${{ env.VELAD_VERSION }} <= $LATEST_VERSION, skip update" && exit 0
           echo ${{ env.VELAD_VERSION }} > ./velad_latest_version
           ./ossutil --config-file .ossutilconfig cp -u ./velad_latest_version oss://kubevela-docs/binary/velad/latest_version
-
