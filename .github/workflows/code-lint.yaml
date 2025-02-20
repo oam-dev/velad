@@ -22,7 +22,7 @@ jobs:
   staticcheck:
     strategy:
       matrix:
-        machines: ["ubuntu-22.04", "macos-12"]
+        machines: ["ubuntu-22.04", "macos-14"]
     runs-on: ${{ matrix.machines }}
     steps:
       - name: Setup Go
@@ -59,7 +59,7 @@ jobs:
   lint:
     strategy:
       matrix:
-        machines: ["ubuntu-22.04", "macos-12"]
+        machines: ["ubuntu-22.04", "macos-14"]
     runs-on: ${{ matrix.machines }}
     steps:
       - name: Setup Go
@@ -97,7 +97,7 @@ jobs:
   go-check:
     strategy:
       matrix:
-        machines: ["ubuntu-22.04", "macos-12"]
+        machines: ["ubuntu-22.04", "macos-14"]
     runs-on: ${{ matrix.machines }}
     steps:
       - name: Setup Go
